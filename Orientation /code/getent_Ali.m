@@ -1,25 +1,24 @@
+%% Inputs
 number_of_regions = 10;
 looked_regions = [1,3,2,5,6,7,9,4,10,9];
 
-looks_matrix = zeros(rois,rois);
-entropy_matix = zeros(rois,rois);
-row_total = zeros(rois);
-col_total = zeros(rois);
-mysize = 0;
+%% Variable initlization
+looks_matrix = zeros(number_of_regions,number_of_regions);
+entropy_matix = zeros(number_of_regions,number_of_regions);
+row_total = zeros(number_of_regions);
+col_total = zeros(number_of_regions);
 
-
-%turn the list of ROIs to a transition matrix;
+%% Computing the transition matrix
 for looked_index =2:number_of_regions
     from = looked_regions(looked_index-1);
     to = looked_regions(looked_index);
     looks_matrix(from,to) = looks_matrix(from,to)+1;
 end
 
-
+%% Entropy calculations
 entropy_matrix = looks_matrix * log2(1/looks_matrix);
 
-%get the row and colum totals
-columntotals = sum(looks_matrix,1);
+columntotals = sum(looks_matrix,1); % option 1 for columns, 2 for rows 
 rowtotals = sum(looks_matrix,2);
 
 column_entropy = columntotals * log2(1/columntotals);
@@ -30,5 +29,8 @@ row_entropy_totals = nansum(row_entropy);
 
 correction = (column_entropy_totals + row_entropy_totals)/2;
 cellenttotal = nansum(nansum(entropy_matrix));
-entropytotal = 1-
-            ((column_entropy_totals + row_entropy_totals - cellenttotal)/correction);
+
+entropy_total = column_entropy_totals + row_entropy_totals - cellenttotal; 
+entropytotal = 1-( entropy_total /correction);
+
+
